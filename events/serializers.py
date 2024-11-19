@@ -17,10 +17,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 class EventSerializer(serializers.ModelSerializer):
     creator = UserDetailSerializer(read_only=True)
     attendants = UserDetailSerializer(many=True, read_only=True)
     tickets_count = serializers.SerializerMethodField(read_only=True)
+    category = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -28,7 +32,9 @@ class EventSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         read_only_fields = ['creator', 'attendants']
 
-
+   # get category name
+    def get_category(self, instance):
+        return instance.category.name
 
     # return only the last 3 attendants
     def to_representation(self, instance):

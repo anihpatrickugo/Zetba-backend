@@ -23,7 +23,7 @@ class ListCategory(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Category.objects.all().order_by('name')
+        return Category.objects.order_by('name')
 
 
 
@@ -48,9 +48,15 @@ class ListEvent(generics.ListAPIView):
 
         return Event.objects.open()
 
-    def get_object(self, pk):
-        event = Event.objects.get(pk=pk)
-        return event
+
+
+class DetailEvent(generics.RetrieveAPIView):
+    """
+          Get event detail
+        """
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 
@@ -152,7 +158,7 @@ class ListCreateTicket(generics.ListCreateAPIView):
     def get_queryset(self):
         # check that user is authenticated
         if self.request.user.is_anonymous:
-            raise PermissionDenied("You are not allowed")
+            raise PermissionDenied("Please login first")
         return super().get_queryset().filter(owner=self.request.user)
 
     def get_object(self, pk):

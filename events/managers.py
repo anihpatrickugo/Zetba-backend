@@ -4,7 +4,7 @@ from django.db import models
 
 class EventManager(models.Manager):
     def upcomming(self):
-        return super().get_queryset().filter(date__gte=timezone.now()).order_by('date').order_by('time')
+        return super().get_queryset().filter(date__gte=timezone.now()).order_by('date__year', 'date__month', 'date__day', 'time')
 
     def popular(self):
         return super().get_queryset().filter(date__gte=timezone.now()).order_by('-attendants').distinct()

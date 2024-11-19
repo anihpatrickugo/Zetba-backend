@@ -77,6 +77,9 @@ INSTALLED_APPS = [
 
 CORS_ALLOW_ALL_ORIGINS =True
 
+
+
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -86,6 +89,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 
    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -95,8 +99,8 @@ REST_AUTH = {
     'USE_JWT': True,
 }
 
-JWT_AUTH = {
-    'JWT_VERIFY_EXPIRATION': False,
+SIMPLE_JWT = {
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=180),
 }
 
 MIDDLEWARE = [
