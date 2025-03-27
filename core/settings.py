@@ -70,6 +70,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'drf_spectacular',
+
+
 
 
 
@@ -93,6 +96,7 @@ REST_FRAMEWORK = {
     ),
 
    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+   'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
    'PAGE_SIZE': 20
 }
 REST_AUTH = {
@@ -101,6 +105,14 @@ REST_AUTH = {
 
 SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=180),
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Zetba API',
+    'DESCRIPTION': 'Your number one ticketing platform',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 MIDDLEWARE = [

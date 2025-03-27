@@ -1,11 +1,11 @@
 from datetime import *
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
-
 
 
 from .models import Event, Ticket, Category
@@ -70,30 +70,19 @@ class ListCreateEvent(generics.ListCreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-
     def perform_create(self, serializer):
-        event = Event.objects.get(pk=serializer.data.get('id'))
-        # check if event attendants is full
-        if event.attendants.count() >= event.seats:
-            raise PermissionDenied("Event is full")
-
-        # check if user is already attending the event
-        if self.request.user in event.attendants.all():
-            raise PermissionDenied("You are already attending this event")
-
-        serializer.save(creator=self.request.user)
-
-        # add user to attendees
-        event.attendants.add(self.request.user)
-        event.save()
-
+        print(self.request.data.get("photo"))
+        category = get_object_or_404(Category, name=self.request.data.get('category'))
+        serializer.save(creator=self.request.user, category=category)
         return super().perform_create(serializer)
+
+
 
     def get_queryset(self):
         # check that user is authenticated
         if self.request.user.is_anonymous:
             raise PermissionDenied("You are not allowed")
-        return Event.objects.filter(creator=self.request.user)
+        return Event.objects.filter(creator=self.request.user).order_by('-id')
 
 
 class RetrieveUpdateDestroyEvent(generics.RetrieveUpdateDestroyAPIView):
@@ -133,11 +122,21 @@ class ListCreateTicket(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # get the event id from the serializer class
         event_id = self.request.data.get('event_id')
-        print(event_id)
+
         # check if event exists
         event = Event.objects.get(pk=event_id)
         if not event:
             raise PermissionDenied("Event does not exist")
+
+        # check if event attendants is full
+        if event.attendants.count() >= event.seats:
+            raise PermissionDenied("Event is full")
+
+        # check if user is already attending the event
+        if self.request.user in event.attendants.all():
+            raise PermissionDenied("You are already attending this event")
+
+
         # check if user has enough balance
         if self.request.user.balance < event.price:
             raise PermissionDenied("You don't have enough balance")

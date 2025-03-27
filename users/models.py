@@ -14,3 +14,4 @@ class Notifications(models.Model):
     title       = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     time        = models.DateTimeField(auto_now_add=True)
+    read        = models.BooleanField(default=False)

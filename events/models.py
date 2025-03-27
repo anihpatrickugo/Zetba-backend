@@ -5,7 +5,7 @@ from .managers import EventManager
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -19,8 +19,8 @@ class Event(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     location_name = models.CharField(max_length=100)
-    location_latitude = models.FloatField()
-    location_longitude = models.FloatField()
+    location_latitude = models.FloatField(null=True, blank=True)
+    location_longitude = models.FloatField(null=True, blank=True)
     date = models.DateField()
     time = models.TimeField()
     price = models.FloatField()

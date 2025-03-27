@@ -9,6 +9,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
 from jwt import InvalidSignatureError, ExpiredSignatureError, DecodeError
 from jwt import decode as jwt_decode
+from rest_framework_simplejwt.tokens import UntypedToken
 
 User = get_user_model()
 
@@ -34,8 +35,12 @@ class JWTAuthMiddleware:
             # token = parse_qs(scope["query_string"].decode("utf8")).get('token', None)[0]
 
             # Decode the headers and get the token parameter from the Authorization header.
-            token_list = Convert(scope.get('headers', [])).get(b'authorization', b'')
-            token = token_list[0].decode("utf-8")
+            # token_list = Convert(scope.get('headers', [])).get(b'authorization', b'')
+            # token = token_list[0].decode("utf-8")
+
+           # Get token from header
+            headers = dict(scope["headers"])
+            token = headers[b"authorization"].decode()
 
             # Decode the token to get the user id from it.
             data = jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])

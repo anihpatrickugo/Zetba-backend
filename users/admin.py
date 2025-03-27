@@ -10,7 +10,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     ordering = ('first_name', 'last_name', 'email')
 
 admin.site.register(CustomUser, CustomUserAdmin)
-# admin.site.register(Notifications)
+admin.site.register(Notifications)
 admin.site.site_header = 'Zetba Event Management System'
 
 
