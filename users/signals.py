@@ -21,7 +21,8 @@ def send_notification(sender, instance, **kwargs):
     dic = {
         "title": instance.title,
         "description": instance.description,
-        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     # turn to the data dictionary to json
     json_data = json.dumps(dic, sort_keys=True, indent=1, cls=DjangoJSONEncoder)

@@ -13,5 +13,6 @@ class Notifications(models.Model):
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title       = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    time        = models.DateTimeField(auto_now_add=True)
+    date        = models.DateField(auto_now_add=True)
+    time        = models.TimeField(auto_now_add=True)
     read        = models.BooleanField(default=False)
