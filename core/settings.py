@@ -72,16 +72,9 @@ INSTALLED_APPS = [
 
     'drf_spectacular',
 
-
-
-
-
 ]
 
 CORS_ALLOW_ALL_ORIGINS =True
-
-
-
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -228,14 +221,11 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
+# all auth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
-
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-
-ACCOUNT_EMAIL_REQUIRED = False
-
-
-
 
 # client id
 # W1qJEAuv6pwXDeORBo8e45e7rdCQt47GOiI4jUgX
