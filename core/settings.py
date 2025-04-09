@@ -59,7 +59,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+
     'rest_framework_simplejwt',
+
     'dj_rest_auth',
     
     'django.contrib.sites',
@@ -72,9 +74,16 @@ INSTALLED_APPS = [
 
     'drf_spectacular',
 
+
+
+
+
 ]
 
 CORS_ALLOW_ALL_ORIGINS =True
+
+
+
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -85,7 +94,9 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     ),
 
    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -94,6 +105,7 @@ REST_FRAMEWORK = {
 }
 REST_AUTH = {
     'USE_JWT': True,
+    'USER_DETAILS_SERIALIZER': 'users.serializers.CustomUserDetailsSerializer',
 }
 
 SIMPLE_JWT = {
@@ -221,11 +233,14 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
-# all auth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
+
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_EMAIL_REQUIRED = False
+
+
+
 
 # client id
 # W1qJEAuv6pwXDeORBo8e45e7rdCQt47GOiI4jUgX
