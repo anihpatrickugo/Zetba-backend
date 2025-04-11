@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'drf_spectacular',
+    "phonenumber_field",
 
 
 

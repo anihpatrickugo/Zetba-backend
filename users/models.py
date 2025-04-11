@@ -1,11 +1,13 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 # Create your models here.
 
 class CustomUser(AbstractUser):
+    phone = PhoneNumberField(blank=True, region="NG")
     balance = models.IntegerField(default=0)
     photo = models.ImageField(blank=True, null=True, upload_to='images/profile')
 
