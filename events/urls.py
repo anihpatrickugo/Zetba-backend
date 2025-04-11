@@ -1,6 +1,6 @@
 from  django.urls import path
 
-from .views import ListEvent, DetailEvent, ListCreateEvent, RetrieveUpdateDestroyEvent, ListCreateTicket, ListCategory
+from .views import ListEvent, DetailEvent, ListCreateEvent, RetrieveUpdateDestroyEvent, ListCreateTicket, ListBookMarks, CreateBookMarkAPIView, ListCategory
 
 
 urlpatterns = [
@@ -14,4 +14,8 @@ urlpatterns = [
 
     path('tickets/', ListCreateTicket.as_view(), name='ticket_list'),
     path('tickets/<int:pk>/', ListCreateTicket.as_view(), name='ticket_detail'),
+
+    path('bookmarks/', ListBookMarks.as_view(), name='bookmarks_list'),
+    path('bookmark/', CreateBookMarkAPIView.as_view(), name='bookmark'),
+
 ]

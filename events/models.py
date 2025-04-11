@@ -44,3 +44,11 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.owner.username} - {self.event.title}"
+
+
+class BookMark(models.Model):
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.event.title}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Category, Ticket
+from .models import Event, Category, Ticket, BookMark
 
 # Register your models here.
 
@@ -15,4 +15,5 @@ class TicketAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Ticket, TicketAdmin)
+admin.site.register(BookMark)
 

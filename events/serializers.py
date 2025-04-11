@@ -25,12 +25,13 @@ class EventSerializer(serializers.ModelSerializer):
     attendants = UserDetailSerializer(many=True, read_only=True)
     tickets_count = serializers.SerializerMethodField(read_only=True)
     category = serializers.SerializerMethodField()
+    bookmarked = serializers.SerializerMethodField(read_only=True)
 
 
     class Meta:
         model = Event
         fields = ('__all__')
-        read_only_fields = ['creator', 'attendants']
+        read_only_fields = ['creator', 'attendants', 'bookmarked']
 
    # get category name
     def get_category(self, instance):
@@ -46,6 +47,12 @@ class EventSerializer(serializers.ModelSerializer):
     # get total number of tickets
     def get_tickets_count(self, instance):
         return instance.attendants.count()
+
+    def get_bookmarked(self, instance):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            return instance.bookmark_set.filter(user=user).exists()
+        return False
 
 
 
