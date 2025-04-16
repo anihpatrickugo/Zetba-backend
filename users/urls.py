@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from users.views import GoogleLogin, NotificationView
+from users.views import GoogleLogin, NotificationView, TopUpView
 
 
 urlpatterns = [
@@ -20,6 +20,8 @@ urlpatterns = [
 
     path('notifications/', NotificationView.as_view(), name='notification_list'),
     path('notifications/<int:pk>/', NotificationView.as_view(), name='notification_detail'),
+
+    path('topup/', TopUpView.as_view(), name='topup'),
 
 
 ]

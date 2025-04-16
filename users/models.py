@@ -11,6 +11,24 @@ class CustomUser(AbstractUser):
     balance = models.IntegerField(default=0)
     photo = models.ImageField(blank=True, null=True, upload_to='images/profile')
 
+
+class TopUp(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    reference = models.CharField(max_length=100, unique=True)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+
+
+class Withdrawal(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    reference = models.CharField(max_length=100, unique=True)
+    amount = models.IntegerField()
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
+
+
+
 class Notifications(models.Model):
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title       = models.CharField(max_length=50)

@@ -8,12 +8,14 @@ from phonenumber_field.serializerfields import PhoneNumberField
 User = get_user_model()
 
 class CustomUserDetailsSerializer(UserDetailsSerializer):
+
+    email = serializers.EmailField()
     phone = PhoneNumberField(region="NG")
     balance = serializers.IntegerField(read_only=True)
-    photo = serializers.ImageField(read_only=True)
+    photo = serializers.ImageField()
 
     class Meta(UserDetailsSerializer.Meta):
-        fields = UserDetailsSerializer.Meta.fields + ('phone', 'balance', 'photo',)
+        fields = UserDetailsSerializer.Meta.fields + ('email', 'phone', 'balance', 'photo',)
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
