@@ -161,17 +161,23 @@ class ListCreateTicket(generics.ListCreateAPIView):
             raise PermissionDenied("Please login first")
         return super().get_queryset().filter(owner=self.request.user)
 
-    def get_object(self, pk):
+
+class TicketDetailView(generics.RetrieveAPIView):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    lookup_field = 'pk'
+
+
+    def get_object(self):
+        # check that user is authenticated
         if self.request.user.is_anonymous:
             raise PermissionDenied("You are not allowed to see the ticket")
-        ticket  = Ticket.objects.get(owner=self.request.user, pk=pk)
 
-         # check if ticket exists
+        # check if ticket exists
+        ticket = Ticket.objects.get(owner=self.request.user, pk=self.kwargs['pk'])
         if not ticket:
-            raise PermissionDenied("You don't have a ticket")
+            raise PermissionDenied("Ticket does not exist")
         return ticket
-
-
 
 class ListBookMarks(generics.ListAPIView):
     """
@@ -191,30 +197,7 @@ class ListBookMarks(generics.ListAPIView):
         return bookmarks
 
 
-# class CreateBookMark(generics.ListAPIView):
-#     """
-#     Create new bookmark
-#     """
-#     queryset = BookMark.objects.all()
-#     serializer_class = EventSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#
-#     def get_object(self, pk):
-#         # check that user is authenticated
-#         if self.request.user.is_anonymous:
-#             raise PermissionDenied("You are not allowed to see the bookmarks")
-#
-#         #fetch all bookmarked event
-#         bookmark = BookMark.objects.filter(user=self.request.user, pk=pk)
-#
-#         if not bookmark:
-#             # add it to bookmarks
-#             BookMark.objects.create(user=self.request.user, event=pk)
-#             return Response({"message": "Bookmark created successfully"}, status=status.HTTP_201_CREATED)
-#         else:
-#             # remove it from bookmarks
-#             bookmark.delete()
-#             return Response({"message": "Bookmark deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 class CreateBookMarkAPIView(APIView):
