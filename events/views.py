@@ -227,3 +227,4 @@ class CreateBookMarkAPIView(APIView):
             print(f"An error occurred: {e}")
             return Response("Error processing data", status=status.HTTP_400_BAD_REQUEST)
 
+
