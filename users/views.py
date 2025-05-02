@@ -37,6 +37,58 @@ class NotificationView(APIView, ListModelMixin, RetrieveModelMixin):
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
 
+# class TopUpView(APIView):
+#     """
+#     Top up user balance
+#     """
+#     def post(self, request, *args, **kwargs):
+#         user = request.user
+#         amount = request.data.get('amount')
+#         refrence = request.data.get('reference')
+#
+#         if not user.is_authenticated:
+#             return Response({'error': 'User is not authenticated'}, status=401)
+#         if not refrence:
+#             return Response({'error': 'Reference is required'}, status=400)
+#         if not amount:
+#             return Response({'error': 'Amount is required'}, status=400)
+#         if amount <= 0:
+#             return Response({'error': 'Amount must be greater than 0'}, status=400)
+#
+#         # verify paystack transfer
+#         try:
+#             response = paystack_verify_transfer(refrence)
+#             if response['status'] == False:
+#                 return Response({'error': 'Invalid reference'}, status=400)
+#             else:
+#                 data = response['data']
+#                 if data['status'] != 'success':
+#                     return Response({'error': 'Payment not successful'}, status=400)
+#                 else:
+#                     # check if the payment already in database
+#                     top_up = TopUp.objects.filter(reference=refrence).first()
+#                     if top_up:
+#                         return Response({'error': 'Payment already verified'}, status=400)
+#
+#                     verified_amount = data['amount']
+#                     top_up = TopUp.objects.create(user=user, amount=verified_amount, reference=refrence)
+#                     top_up.save()
+#
+#                     user.balance += top_up.amount
+#                     user.save()
+#
+#                     # Create a notification for the user
+#                     notification = Notifications.objects.create(
+#                         user=user,
+#                         title='Top Up Successful',
+#                         description=f'Your account has been credited with {top_up.amount} Naira.',
+#                     )
+#                     notification.save()
+#
+#                     return Response({'message': 'Balance updated successfully'}, status=200)
+#
+#         except Exception as e:
+#             return Response({'error': 'Payment failed'}, status=400)
 
 class TopUpView(APIView):
     """
@@ -55,6 +107,8 @@ class TopUpView(APIView):
             return Response({'error': 'Amount is required'}, status=400)
         if amount <= 0:
             return Response({'error': 'Amount must be greater than 0'}, status=400)
+        if TopUp.objects.filter(reference=refrence).first():
+            return Response({'error': 'Payment already Exist'}, status=400)
 
         top_up = TopUp.objects.create(user=user, amount=amount, reference=refrence)
         top_up.save()
