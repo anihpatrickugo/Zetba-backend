@@ -3,13 +3,14 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 
 
+
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 
 from .models import Notifications, TopUp, Withdrawal
 from .serializers import NotificationSerializer
-from .payment import paystack_payment
+from .payment import paystack_payment, paystack_verify_transfer
 from .utils import generate_alphanumeric_code
 
 class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
@@ -24,6 +25,7 @@ class NotificationView(APIView, ListModelMixin, RetrieveModelMixin):
     """
     queryset = Notifications.objects.all()
     serializer_class = NotificationSerializer
+    pagination_class = LargeResultsSetPagination
 
 
 
@@ -36,59 +38,6 @@ class NotificationView(APIView, ListModelMixin, RetrieveModelMixin):
         notifications = Notifications.objects.filter(user=request.user).order_by('-time')
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
-
-# class TopUpView(APIView):
-#     """
-#     Top up user balance
-#     """
-#     def post(self, request, *args, **kwargs):
-#         user = request.user
-#         amount = request.data.get('amount')
-#         refrence = request.data.get('reference')
-#
-#         if not user.is_authenticated:
-#             return Response({'error': 'User is not authenticated'}, status=401)
-#         if not refrence:
-#             return Response({'error': 'Reference is required'}, status=400)
-#         if not amount:
-#             return Response({'error': 'Amount is required'}, status=400)
-#         if amount <= 0:
-#             return Response({'error': 'Amount must be greater than 0'}, status=400)
-#
-#         # verify paystack transfer
-#         try:
-#             response = paystack_verify_transfer(refrence)
-#             if response['status'] == False:
-#                 return Response({'error': 'Invalid reference'}, status=400)
-#             else:
-#                 data = response['data']
-#                 if data['status'] != 'success':
-#                     return Response({'error': 'Payment not successful'}, status=400)
-#                 else:
-#                     # check if the payment already in database
-#                     top_up = TopUp.objects.filter(reference=refrence).first()
-#                     if top_up:
-#                         return Response({'error': 'Payment already verified'}, status=400)
-#
-#                     verified_amount = data['amount']
-#                     top_up = TopUp.objects.create(user=user, amount=verified_amount, reference=refrence)
-#                     top_up.save()
-#
-#                     user.balance += top_up.amount
-#                     user.save()
-#
-#                     # Create a notification for the user
-#                     notification = Notifications.objects.create(
-#                         user=user,
-#                         title='Top Up Successful',
-#                         description=f'Your account has been credited with {top_up.amount} Naira.',
-#                     )
-#                     notification.save()
-#
-#                     return Response({'message': 'Balance updated successfully'}, status=200)
-#
-#         except Exception as e:
-#             return Response({'error': 'Payment failed'}, status=400)
 
 class TopUpView(APIView):
     """
@@ -107,24 +56,43 @@ class TopUpView(APIView):
             return Response({'error': 'Amount is required'}, status=400)
         if amount <= 0:
             return Response({'error': 'Amount must be greater than 0'}, status=400)
-        if TopUp.objects.filter(reference=refrence).first():
-            return Response({'error': 'Payment already Exist'}, status=400)
 
-        top_up = TopUp.objects.create(user=user, amount=amount, reference=refrence)
-        top_up.save()
+        # verify paystack transfer
+        try:
+            response = paystack_verify_transfer(refrence)
+            if response['status'] == False:
+                return Response({'error': 'Invalid reference'}, status=400)
+            else:
+                data = response['data']
+                if data['status'] != 'success':
+                    return Response({'error': 'Payment not successful'}, status=400)
+                else:
+                    # check if the payment already in database
+                    top_up = TopUp.objects.filter(reference=refrence).first()
+                    if top_up:
+                        return Response({'error': 'Payment already exist in database'}, status=400)
 
-        user.balance += top_up.amount
-        user.save()
+                    verified_amount = int(data['amount']) / 100
+                    top_up = TopUp.objects.create(user=user, amount=verified_amount, reference=refrence)
+                    top_up.save()
 
-        # Create a notification for the user
-        notification = Notifications.objects.create(
-            user=user,
-            title='Top Up Successful',
-            description=f'Your account has been credited with {top_up.amount} Naira.',
-        )
-        notification.save()
+                    user.balance += top_up.amount
+                    user.save()
 
-        return Response({'message': 'Balance updated successfully'}, status=200)
+                    # Create a notification for the user
+                    notification = Notifications.objects.create(
+                        user=user,
+                        title='Top Up Successful',
+                        description=f'Your account has been credited with {top_up.amount} Naira.',
+                    )
+                    notification.save()
+
+                    return Response({'message': 'Balance updated successfully'}, status=200)
+
+        except Exception as e:
+            return Response({'error': 'Payment failed'}, status=400)
+
+
 
 
 class WithdrawalView(APIView):

@@ -29,14 +29,12 @@ def paystack_payment(amount,  recipient, reference):
 def paystack_verify_transfer(reference):
     try:
         res = requests.get(
-            f"https://api.paystack.co/transfer/verify/{reference}",
+            f"https://api.paystack.co/transaction/verify/{reference}",
             headers={
                 'Authorization': f'Bearer {bearer_token}',
                 'Content-Type': 'application/json'
             },
         )
-        print(reference)
-        print("My data is : ", res.json())
         return res.json()
 
     except requests.exceptions.RequestException as e:
