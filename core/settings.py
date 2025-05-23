@@ -111,6 +111,7 @@ REST_AUTH = {
 
 SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=180),
+    'JWT_AUTH_COOKIE': True,
 }
 
 SPECTACULAR_SETTINGS = {

@@ -25,7 +25,7 @@ class NotificationView(APIView, ListModelMixin, RetrieveModelMixin):
     """
     queryset = Notifications.objects.all()
     serializer_class = NotificationSerializer
-    pagination_class = LargeResultsSetPagination
+    
 
 
 
