@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'dj_rest_auth.registration',
+    'django_rest_passwordreset',
 
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
@@ -107,6 +108,11 @@ REST_FRAMEWORK = {
 REST_AUTH = {
     'USE_JWT': True,
     'USER_DETAILS_SERIALIZER': 'users.serializers.CustomUserDetailsSerializer',
+    'OLD_PASSWORD_FIELD_ENABLED': True,
+    # **IMPORTANT**: This is the URL your FRONTEND will use!
+    'RESET_PASSWORD_URL': 'http://192.168.43.254:8000/user/auth/password/reset/confirm/',
+    
+
 }
 
 SIMPLE_JWT = {

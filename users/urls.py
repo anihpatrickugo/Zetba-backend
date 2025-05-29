@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('auth/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('auth/google/', GoogleLogin.as_view(), name='google_login'),
 
     path('notifications/', NotificationView.as_view(), name='notification_list'),
