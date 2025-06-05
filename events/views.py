@@ -72,10 +72,10 @@ class ListCreateEvent(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        print(self.request.data.get("photo"))
+        # print(self.request.data.get("photo"))
         category = get_object_or_404(Category, name=self.request.data.get('category'))
         serializer.save(creator=self.request.user, category=category)
-        return super().perform_create(serializer)
+
 
 
 
