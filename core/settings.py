@@ -171,11 +171,21 @@ ASGI_APPLICATION = "core.asgi.application"
 # Adding Django Channel Layers
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-
-    },
+   "default": {
+       "BACKEND": "channels_redis.core.RedisChannelLayer",
+       "CONFIG": {
+           "hosts": ["redis://red-d14mv063jp1c73bjhd8g:6379"]  # Default Redis host and port
+       }
+   }
 }
+
+
+#
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#     },
+# }
 
 # End Django Channels
 
