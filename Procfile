@@ -1,1 +1,1 @@
-web: daphene core.asgi:application
+web: daphne core.asgi:application
