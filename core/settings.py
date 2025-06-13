@@ -174,7 +174,7 @@ CHANNEL_LAYERS = {
    "default": {
        "BACKEND": "channels_redis.core.RedisChannelLayer",
        "CONFIG": {
-           "hosts": [env('REDIS_CHANNELS_URL')]  # Default Redis host and port here
+           "hosts": ["redis://red-d14mv063jp1c73bjhd8g:6379"]  # Default Redis host and port here
        }
    }
 }
@@ -260,9 +260,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_ROOT = BASE_DIR / "media"
