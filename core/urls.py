@@ -18,7 +18,9 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse_lazy
+
+from django.views.generic.base import RedirectView
 
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, SpectacularJSONAPIView
 
@@ -28,6 +30,7 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('user/', include('users.urls')),
+    path('', RedirectView.as_view(url=reverse_lazy('swagger-ui'), permanent=True), name='index_redirect'),
     path('', include('events.urls')),
     path('api/schema/json/', SpectacularJSONAPIView.as_view(), name='schema'),
     # Optional UI:
