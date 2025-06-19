@@ -99,10 +99,14 @@ class PaystackWebhookView(APIView):
             top_up.status = 'completed'  # Assuming you have a status field
             top_up.save()
 
+            logger.info("Topup successful")
+
             # - Update user balance
             user = top_up.user
             user.balance += top_up.amount
             user.save()
+
+            logger.info("balance added")
 
 
 
