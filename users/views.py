@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 import json
 
-
+import logging
+logger = logging.getLogger('my_app')
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -57,7 +58,7 @@ class PaystackWebhookView(APIView):
         # 3. VERIFY THE WEBHOOK SIGNATURE (CRITICAL!)
         # Implement your signature verification logic here using settings.PAYSTACK_SECRET_KEY
         if not signature_header:
-            print("Paystack webhook received without signature header.")
+            logger.info("Paystack webhook received without signature header.")
             return Response({"detail": "Signature missing"}, status=status.HTTP_403_FORBIDDEN)
 
         # Example placeholder for actual verification
@@ -70,7 +71,7 @@ class PaystackWebhookView(APIView):
         try:
             payload = json.loads(raw_payload)
         except json.JSONDecodeError:
-            print(f"Invalid JSON payload received by Paystack webhook: {raw_payload.decode()}")
+            logger.error(f"Invalid JSON payload received by Paystack webhook: {raw_payload.decode()}")
             return Response({"detail": "Invalid JSON payload"}, status=status.HTTP_400_BAD_REQUEST)
 
         # 5. Process the event (asynchronous processing recommended)
@@ -82,7 +83,7 @@ class PaystackWebhookView(APIView):
             amount = transaction_data.get('amount')
             customer_email = transaction_data.get('customer', {}).get('email')
 
-            print(
+            logger.info(
                 f"Processing successful Paystack payment for reference: {reference}, Amount: {amount}, Email: {customer_email}")
             # Your business logic here:
 
@@ -112,12 +113,13 @@ class PaystackWebhookView(APIView):
                 description=f'Your account has been credited with {top_up.amount} Naira.',
             )
             notification.save()
+            logger.info("Notification sent")
 
             # - Trigger other internal processes
             # Remember to make this idempotent!
 
         else:
-            print(f"Received unhandled Paystack event type: {event_type}")
+            logger.error("Received unhandled Paystack event type: {event_type}")
 
         # 5. Acknowledge receipt
         return Response({"status": "success", "message": "Webhook received"}, status=status.HTTP_200_OK)

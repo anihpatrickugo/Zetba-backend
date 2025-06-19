@@ -163,6 +163,68 @@ TEMPLATES = [
         },
     },
 ]
+
+# settings.py
+
+LOGGING = {
+    'version': 1,  # Specifies the dictConfig schema version
+    'disable_existing_loggers': False,  # Keep existing loggers (e.g., Django's default ones)
+
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'level': 'INFO',  # Minimum level to log to console
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        # 'file': {
+        #     'level': 'DEBUG',  # Minimum level to log to file
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': '/path/to/your/logs/django_debug.log',  # IMPORTANT: Change this path
+        #     'maxBytes': 1024 * 1024 * 5,  # 5 MB
+        #     'backupCount': 5,
+        #     'formatter': 'verbose',
+        # },
+        # 'mail_admins': {
+        #     'level': 'ERROR',  # Only send emails for ERROR and critical
+        #     'class': 'django.utils.log.AdminEmailHandler',
+        #      'include_html': True, # Set to True to send HTML emails
+        # }
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True, # Pass messages to parent loggers (e.g., root logger)
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False, # Don't send request errors to the 'django' logger again
+        },
+        'my_app': { # Custom logger for your application
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False, # Don't pass to Django's root logger if you want to handle it separately
+        },
+        '': {  # Root logger - catches anything not caught by specific loggers
+            'handlers': ['console'],
+            'level': 'WARNING',
+        }
+    },
+}
+
 ROOT_URLCONF = "core.urls"
 
 WSGI_APPLICATION = "core.wsgi.application"
