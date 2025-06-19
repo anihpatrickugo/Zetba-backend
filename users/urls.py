@@ -1,12 +1,12 @@
-
-from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
-from users.views import GoogleLogin, NotificationView, TopUpView, WithdrawalView
+from users.views import GoogleLogin, NotificationView, TopUpView, WithdrawalView, PaystackWebhookView
+
 
 
 urlpatterns = [
@@ -22,8 +22,10 @@ urlpatterns = [
     path('notifications/', NotificationView.as_view(), name='notification_list'),
     path('notifications/<int:pk>/', NotificationView.as_view(), name='notification_detail'),
 
-    path('topup/', TopUpView.as_view(), name='topup'),
+    path('paystack-webhook/', csrf_exempt(PaystackWebhookView.as_view()), name='paystack_webhook'),
+    # path('topup/', TopUpView.as_view(), name='topup'),
     path('withdrawal/', WithdrawalView.as_view(), name='withdrawal')
+
 
 
 ]
