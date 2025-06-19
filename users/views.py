@@ -1,6 +1,7 @@
 
 from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 import json
@@ -43,6 +44,9 @@ class NotificationView(APIView, ListModelMixin, RetrieveModelMixin):
         return Response(serializer.data)
 
 class PaystackWebhookView(APIView):
+    authentication_classes = []  # No authentication required
+    permission_classes = [AllowAny]  # No permission checks required
+
     def post(self, request, *args, **kwargs):
         # 1. Get the raw request body
         raw_payload = request.body
