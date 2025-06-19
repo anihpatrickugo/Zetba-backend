@@ -23,7 +23,7 @@ urlpatterns = [
     path('notifications/<int:pk>/', NotificationView.as_view(), name='notification_detail'),
 
     path('paystack-webhook/', csrf_exempt(PaystackWebhookView.as_view()), name='paystack_webhook'),
-    # path('topup/', TopUpView.as_view(), name='topup'),
+    path('topup/', TopUpView.as_view(), name='topup'),
     path('withdrawal/', WithdrawalView.as_view(), name='withdrawal')
 
 
