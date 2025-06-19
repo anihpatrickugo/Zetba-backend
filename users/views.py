@@ -88,13 +88,12 @@ class PaystackWebhookView(APIView):
             # Your business logic here:
 
             # check if the payment already in database
-            top_up = TopUp.objects.filter(reference=reference).first()
+            top_up = TopUp.objects.get(reference=reference)
+
             if  not top_up:
                 logger.error("Top up not found in database")
                 return Response({'error': 'Payment does not exist in database'}, status=400)
 
-            verified_amount = int(amount) / 100
-            top_up = TopUp.objects.get(amount=verified_amount, reference=reference)
 
             # - Update order status in your database
             top_up.status = 'completed'  # Assuming you have a status field
