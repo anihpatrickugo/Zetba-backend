@@ -209,7 +209,7 @@ LOGGING = {
             'propagate': True, # Pass messages to parent loggers (e.g., root logger)
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['console'],
             'level': 'ERROR',
             'propagate': False, # Don't send request errors to the 'django' logger again
         },
