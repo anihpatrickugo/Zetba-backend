@@ -90,6 +90,7 @@ class PaystackWebhookView(APIView):
             # check if the payment already in database
             top_up = TopUp.objects.filter(reference=reference).first()
             if  not top_up:
+                logger.error("Top up not found in database")
                 return Response({'error': 'Payment does not exist in database'}, status=400)
 
             verified_amount = int(amount) / 100
@@ -106,7 +107,7 @@ class PaystackWebhookView(APIView):
             user.balance += top_up.amount
             user.save()
 
-            logger.info("balance added")
+            logger.info(f"{user.username} balance added")
 
 
 
