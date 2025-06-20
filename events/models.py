@@ -29,6 +29,11 @@ class Event(models.Model):
     attendants = models.ManyToManyField('users.CustomUser', through='Ticket', related_name='events')
     creator = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
 
+    objects = EventManager()
+
+    def __str__(self):
+        return self.title
+
 
     # used by algolia search
 
