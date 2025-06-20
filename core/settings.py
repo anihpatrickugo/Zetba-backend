@@ -81,10 +81,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     'cloudinary_storage', # Must be before cloudinary
     'cloudinary',
-
-
-
-
+    'algoliasearch_django',
 
 ]
 
@@ -368,4 +365,12 @@ CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': env('CLOUDINARY_API_KEY'),
     'API_SECRET': env('CLOUDINARY_API_SECRET'),
+}
+
+# Algolia Configuration
+ALGOLIA = {
+    'APPLICATION_ID': env('ALGOLIA_APPLICATION_ID'),
+    'API_KEY': env('ALGOLIA_WRITE_API_KEY'), # Use Admin API Key for indexing
+    # 'INDEX_PREFIX': 'my_app_', # Optional: prefix for your index names (e.g., my_app_Product)
+    # 'AUTO_INDEXING': True, # Default is True, automatically syncs model changes
 }

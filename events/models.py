@@ -30,10 +30,28 @@ class Event(models.Model):
     creator = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
 
 
-    objects = EventManager()
+    # used by algolia search
 
-    def __str__(self):
-        return self.title
+    def get_photo(self):
+        """Returns the absolute URL of the event photo."""
+        if self.photo:
+            return self.photo.url
+        # You can return a default placeholder image URL if no photo exists
+        return "https://yourdomain.com/static/placeholder.png"
+
+    def get_category_name(self):
+        return self.category.name
+
+    def get_creator_name(self):
+        return self.creator.username
+
+    def get_date(self):
+        return self.date.strftime('%Y-%m-%d') if self.date else None
+
+    def get_time(self):
+        return self.time.strftime('%H:%M:%S') if self.time else None
+
+
 
 
 class Ticket(models.Model):
@@ -52,3 +70,5 @@ class BookMark(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.event.title}"
+
+
