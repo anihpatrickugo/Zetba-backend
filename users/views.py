@@ -144,7 +144,7 @@ class WithdrawalView(APIView):
         # Create a notification for the user
         notification = Notifications.objects.create(
             user=user,
-            title='Withdrawal Successful',
+            title='Withdrawal Initiated',
             description=f'Your account has been debited with {withdrawal.amount} Naira.',
         )
         notification.save()
