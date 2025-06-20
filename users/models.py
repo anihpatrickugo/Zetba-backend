@@ -11,11 +11,11 @@ class CustomUser(AbstractUser):
     balance = models.IntegerField(default=0)
     photo = models.ImageField(blank=True, null=True, upload_to='images/profile')
 
-TopUpStatus = (
+WithdrawalStatus = (
     ('pending', 'Pending'),
     ('completed', 'Completed'),
     ('failed', 'Failed'),
-    ('cancelled', 'Cancelled')
+    ('reversed', 'Reversed')
 )
 
 class TopUp(models.Model):
@@ -24,7 +24,7 @@ class TopUp(models.Model):
     reference = models.CharField(max_length=100, unique=True)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=TopUpStatus, default='pending')
+
 
 
 class Withdrawal(models.Model):
@@ -33,6 +33,7 @@ class Withdrawal(models.Model):
     amount = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=WithdrawalStatus, default='pending')
 
 
 
